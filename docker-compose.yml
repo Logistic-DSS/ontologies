@@ -1,0 +1,65 @@
+services:
+
+  ontology-service:
+    build: .
+    container_name: ${APP_CONTAINER_NAME}
+    ports:
+      - "${APP_PORT:-8001}:8001" # В проде делать через через LB / ingress, не публиковать порт
+    volumes: # В проде убрать
+      - ./ontologies:/data/ontologies
+    env_file:
+      - .env # В проде переделать на Vault / SSM / K8s secrets
+    depends_on:
+      ontology-db:
+        condition: service_healthy
+    networks:
+      - dss
+
+  # контейнер БД Postgres
+  ontology-db:
+    image: postgres:15-alpine
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports: # В проде убрать -> ports: []
+      - "${POSTGRES_PORT:-54320}:${INTERNAL_POSTGRES_PORT:-5432}"
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dss
+
+  # контейнер PGAdmin
+  ontology-pg: # Дебаг и мониторинг. В проде убрать
+    image: dpage/pgadmin4
+    container_name: ${PGADMIN_CONTAINER_NAME}
+    restart: always
+    ports:
+      - "${PGADMIN_PORT:-8888}:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - ontology-db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - dss
+
+volumes: # В проде убрать -> volumes: []
+  postgres_data:
+    name: ontology_postgres_data
+  pgadmin_data:
+    name: ontology_pgadmin_data
+
+
+
+networks:
+  dss:
+    external: true
