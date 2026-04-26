@@ -36,7 +36,7 @@ public class RouteService {
 
         OWLOntology task = helpers.loadTaskOntology(taskId);
         UUID individID = UUID.randomUUID();
-        OWLNamedIndividual route = helpers.createIndividual(task, "Маршрут", individID);
+        helpers.createIndividual(task, "Маршрут", individID);
         for (UUID roadId : dto.roads()) assignRoad(taskId, userId, individID, roadId);
         helpers.save(task);
 

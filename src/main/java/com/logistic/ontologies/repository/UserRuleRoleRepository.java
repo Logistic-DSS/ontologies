@@ -15,6 +15,8 @@ public interface UserRuleRoleRepository
 
     Optional<UserRule> findByIdUserIdAndIdRuleId(UUID userId, UUID ruleId);
 
+    List<UserRule> findAllById(UUID ruleId);
+
     List<UserRule> findAllByIdUserId(UUID userId);
 
     boolean existsByIdUserIdAndIdRuleIdAndRole(

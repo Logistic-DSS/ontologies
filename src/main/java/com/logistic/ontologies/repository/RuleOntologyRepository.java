@@ -15,4 +15,6 @@ public interface RuleOntologyRepository
     Page<RuleOntology> findAllByOwnerId(UUID ownerId, Pageable pageable);
 
     Optional<RuleOntology> findByIdAndOwnerId(UUID id, UUID ownerId);
+
+    boolean existsByIdAndOwnerId(UUID id, UUID ownerId);
 }

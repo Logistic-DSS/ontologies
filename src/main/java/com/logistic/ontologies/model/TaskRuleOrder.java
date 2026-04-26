@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
     )
 )
 @Getter
+@Setter
 @NoArgsConstructor
 public class TaskRuleOrder {
 

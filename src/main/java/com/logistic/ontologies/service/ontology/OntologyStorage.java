@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.vocab.SWRLBuiltInsVocabulary;
 
 public interface OntologyStorage {
     
@@ -26,4 +27,6 @@ public interface OntologyStorage {
     OWLClass getClassByName(String className);
     OWLDataProperty getDataPropertyByName(String dataPropertyName);
     OWLObjectProperty getObjectPropertyByName(String objectPropertyName);
+    SWRLBuiltInsVocabulary getSWRLBuiltInByName(String builtInName);
+
 }

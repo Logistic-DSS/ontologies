@@ -1,12 +1,13 @@
 package com.logistic.ontologies.controller.domain;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.logistic.ontologies.dto.ErrorResponse;
 import com.logistic.ontologies.dto.domain.RoadCreateDTO;
@@ -22,7 +24,7 @@ import com.logistic.ontologies.util.SecurityUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 
-@Service
+@Controller
 @RequestMapping("/api/tasks/{taskId}/roads")
 public class RoadController {
 
@@ -33,7 +35,7 @@ public class RoadController {
     private SecurityUtil securityUtil;
 
     @PostMapping("")
-    public ResponseEntity<?> createTransport(@PathVariable UUID taskId, @RequestBody RoadCreateDTO dto) {
+    public ResponseEntity<?> createRoad(@PathVariable UUID taskId, @RequestBody RoadCreateDTO dto) {
         UUID userId = securityUtil.getUserId();
         try {
             return ResponseEntity.ok(service.createRoad(taskId, userId, dto));
@@ -43,7 +45,7 @@ public class RoadController {
     }
 
     @GetMapping("/{roadId}")
-    public ResponseEntity<?> getTransport(@PathVariable UUID taskId, @PathVariable UUID roadId) {
+    public ResponseEntity<?> getRoad(@PathVariable UUID taskId, @PathVariable UUID roadId) {
         UUID userId = securityUtil.getUserId();
         try {
             return ResponseEntity.ok(service.getRoad(taskId, userId, roadId));
@@ -57,7 +59,7 @@ public class RoadController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getTransports(@PathVariable UUID taskId) {
+    public ResponseEntity<?> getRoads(@PathVariable UUID taskId) {
         UUID userId = securityUtil.getUserId();
         try {
             return ResponseEntity.ok(service.getAllRoads(taskId, userId));
@@ -71,7 +73,7 @@ public class RoadController {
     }
 
     @PutMapping("/{roadId}")
-    public ResponseEntity<?> updateTransport(@PathVariable UUID taskId, @PathVariable UUID roadId, @RequestBody RoadCreateDTO dto) {
+    public ResponseEntity<?> updateRoad(@PathVariable UUID taskId, @PathVariable UUID roadId, @RequestBody RoadCreateDTO dto) {
         UUID userId = securityUtil.getUserId();
         try {
             service.updateRoad(taskId, userId, roadId, dto);
@@ -86,7 +88,7 @@ public class RoadController {
     }
     
     @DeleteMapping("/{roadId}")
-    public ResponseEntity<?> deleteTransport(@PathVariable UUID taskId, @PathVariable UUID roadId) {
+    public ResponseEntity<?> deleteRoad(@PathVariable UUID taskId, @PathVariable UUID roadId) {
         UUID userId = securityUtil.getUserId();
         try {
             service.deleteRoad(taskId, userId, roadId);
@@ -100,11 +102,11 @@ public class RoadController {
         }
     }
 
-    @PostMapping("/{roadId}/factors/{factorId}")
-    public ResponseEntity<?> assignCargo(@PathVariable UUID taskId, @PathVariable UUID roadId, @PathVariable UUID factorId) {
+    @PostMapping("/{roadId}/factors")
+    public ResponseEntity<?> assignFactor(@PathVariable UUID taskId, @PathVariable UUID roadId, @RequestParam List<UUID> factorIds) {
         UUID userId = securityUtil.getUserId();
         try {
-            service.assignFactor(taskId, userId, roadId, factorId);
+            service.assignFactor(taskId, userId, roadId, factorIds);
             return (ResponseEntity<?>) ResponseEntity.ok();
         } catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage()));
@@ -116,7 +118,7 @@ public class RoadController {
     }
 
     @DeleteMapping("/{roadId}/factors/{factorId}")
-    public ResponseEntity<?> unassignCargo(@PathVariable UUID taskId, @PathVariable UUID roadId, @PathVariable UUID factorId) {
+    public ResponseEntity<?> unassignFactor(@PathVariable UUID taskId, @PathVariable UUID roadId, @PathVariable UUID factorId) {
         UUID userId = securityUtil.getUserId();
         try {
             service.unassignFactor(taskId, userId, roadId, factorId);

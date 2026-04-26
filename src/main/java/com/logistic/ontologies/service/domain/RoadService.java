@@ -123,7 +123,7 @@ public class RoadService {
     }
 
     @Transactional
-    public void assignFactor(UUID taskId, UUID userId, UUID roadId, UUID factorId) throws OWLOntologyCreationException, OWLOntologyStorageException {
+    public void assignFactor(UUID taskId, UUID userId, UUID roadId, List<UUID> factorIds) throws OWLOntologyCreationException, OWLOntologyStorageException {
 
         UserTask role = roleRepo.findByIdUserIdAndIdTaskId(userId, taskId)
             .orElseThrow(() -> new AccessDeniedException("No access"));
@@ -133,8 +133,10 @@ public class RoadService {
 
         OWLOntology task = helpers.loadTaskOntology(taskId);
         OWLNamedIndividual road = helpers.createIndividual(task, "Дорога", roadId);
-        OWLNamedIndividual factor = helpers.requireIndividual(task, "Фактор", factorId);
-        helpers.addObjectProperty(task, road, "Имеет_фактор", factor);
+        for (UUID factorId: factorIds) {
+            OWLNamedIndividual factor = helpers.requireIndividual(task, "Фактор", factorId);
+            helpers.addObjectProperty(task, road, "Имеет_фактор", factor);
+        }
         helpers.save(task);
     }
 
@@ -176,7 +178,7 @@ public class RoadService {
             .stream()
             .findFirst().orElse(null);
         
-        String weatherId = weather == null ? helpers.getStrIDFromURI(weather.getIRI()) : null;
+        String weatherId = weather == null ? null : helpers.getStrIDFromURI(weather.getIRI());
 
         return new RoadDTO(
             taskId,
@@ -213,7 +215,7 @@ public class RoadService {
                     .stream()
                     .findFirst().orElse(null);
                 
-                String weatherId = weather == null ? helpers.getStrIDFromURI(weather.getIRI()) : null;
+                String weatherId = weather == null ? null : helpers.getStrIDFromURI(weather.getIRI());
 
                 return new RoadDTO(
                     taskId,

@@ -17,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
+import org.semanticweb.owlapi.vocab.SWRLBuiltInsVocabulary;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class FileSystemOntologyStorage implements OntologyStorage {
     private String ruleIDIRI;
 
     private final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-    private static OWLOntology base;
+    // private static OWLOntology base;
 
     private Path ROOT;
 
@@ -70,7 +71,7 @@ public class FileSystemOntologyStorage implements OntologyStorage {
             return null;
         });
 
-        base = manager.loadOntologyFromOntologyDocument(docIri);
+        // base = manager.loadOntologyFromOntologyDocument(docIri);
     }
 
     @Override
@@ -158,5 +159,10 @@ public class FileSystemOntologyStorage implements OntologyStorage {
     @Override
     public OWLObjectProperty getObjectPropertyByName(String objectPropertyName) {
         return manager.getOWLDataFactory().getOWLObjectProperty(IRI.create(baseOntologyIRI + "#" + objectPropertyName));
+    }
+
+    @Override
+    public SWRLBuiltInsVocabulary getSWRLBuiltInByName(String builtInName) {
+        return SWRLBuiltInsVocabulary.getBuiltIn(IRI.create("http://www.w3.org/2003/11/swrlb#" + builtInName));
     }
 }

@@ -35,7 +35,6 @@ public class RuleOntologyService {
     @Transactional
     public OntologyDTO createRuleOntology(UUID ownerId, OntologyCreateDTO dto) throws OWLOntologyCreationException {
         RuleOntology rule = new RuleOntology();
-        rule.setId(UUID.randomUUID());
         rule.setOwnerId(ownerId);
         rule.setName(dto.name());
         rule.setDescription(dto.description());

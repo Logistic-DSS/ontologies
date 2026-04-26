@@ -15,6 +15,8 @@ public interface UserTaskRoleRepository
 
     Optional<UserTask> findByIdUserIdAndIdTaskId(UUID userId, UUID taskId);
 
+    List<UserTask> findAllById(UUID taskId);
+
     List<UserTask> findAllByIdUserId(UUID userId);
 
     boolean existsByIdUserIdAndIdTaskIdAndRole(

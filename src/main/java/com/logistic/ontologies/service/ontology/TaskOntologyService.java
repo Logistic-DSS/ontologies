@@ -38,7 +38,6 @@ public class TaskOntologyService {
         task.setOwnerId(ownerId);
         task.setName(dto.name());
         task.setDescription(dto.description());
-
         taskRepo.save(task);
 
         UserTask role = new UserTask(task.getOwnerId(), task.getId());
