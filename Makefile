@@ -1,15 +1,3 @@
-# чистка артефактов
-clean:
-	mvn clean
-
-# сборка jar-файла приложения
-package:
-	mvn clean compile package
-
-# сборка jar-файла приложения
-package-without-tests:
-	mvn clean compile package -DskipTests
-
 # запуск тестов
 test:
 	mvn test
@@ -29,9 +17,3 @@ up:
 # выключить Docker-контейнер
 down:
 	docker compose down
-
-remove:
-	docker compose down -v
-
-dev:
-	clean package build up

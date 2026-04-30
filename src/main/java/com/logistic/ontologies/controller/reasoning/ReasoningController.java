@@ -13,6 +13,7 @@ import com.logistic.ontologies.dto.ErrorResponse;
 import com.logistic.ontologies.service.reasoning.ReasoningService;
 import com.logistic.ontologies.util.SecurityUtil;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ public class ReasoningController {
     @Autowired
     private SecurityUtil securityUtil;
 
+    @Operation(summary = "Performs reasoning over the specified task ontology")
     @GetMapping("/{taskId}")
     public ResponseEntity<?> getReasoninResults(@PathVariable UUID taskId) {
         UUID userId = securityUtil.getUserId();
